@@ -73,8 +73,8 @@ class Bayes_Classifier:
                         self.word_list[word][sentiment] += 1
                     else:
                         self.word_list[word] = {}
-                        self.word_list[word][sentiment] = 2
-                        self.word_list[word][anti_senti] = 1
+                        self.word_list[word][sentiment] = 1
+                        self.word_list[word][anti_senti] = 0
         return
 
 
@@ -100,15 +100,14 @@ class Bayes_Classifier:
         return sentiment_result
 
     def log_prob_calc(self, word, sentiment, count_pos, count_neg):
-        word_count = 0
-        total_count = (count_pos if sentiment == "5" else count_neg)
+        word_count = 0 
+        total_count = (count_pos+len(self.word_list) if sentiment == "5" else count_neg+len(self.word_list))
         if word in self.word_list:
-            word_count = self.word_list[word][sentiment]
+            word_count = self.word_list[word][sentiment]+1
         else:
             word_count = 1
         if (word in self.POS and sentiment == "5") or (word in self.NEG and sentiment == "1"):
             word_count = word_count * 2.5
-        
         #print(word, word_count, total_count)
         return math.log(word_count/total_count)
         
